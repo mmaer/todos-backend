@@ -1,4 +1,7 @@
-import { Controller, Res, Body, HttpStatus, Post, Get, Param, NotFoundException, Put, Query, Delete } from '@nestjs/common';
+import { Controller, Res, Body, HttpStatus, Post, Get, Param, NotFoundException, Put, Query, Delete, UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 
 import { TodoService } from './todo.service';
 import { CreateTodoDTO } from './dto/create-todo.dto';
@@ -9,6 +12,7 @@ export class TodoController {
 
   constructor(private todoService: TodoService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/add')
   async addTodo(@Res() res, @Body() createTodoDTO: CreateTodoDTO) {
     const newTodo = await this.todoService.addTodo(createTodoDTO);
@@ -18,6 +22,7 @@ export class TodoController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/edit')
   async editTodo(@Res() res, @Query('todoId', new ValidateObjectId()) todoId, @Body() createTodoDTO: CreateTodoDTO) {
     const editedTodo = await this.todoService.editTodo(todoId, createTodoDTO);
@@ -31,6 +36,7 @@ export class TodoController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/delete')
   async deleteTodo(@Res() res, @Query('todoId', new ValidateObjectId()) todoId) {
     const deletedTodo = await this.todoService.deleteTodo(todoId);
@@ -44,6 +50,7 @@ export class TodoController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('todo/:todoId')
   async getTodo(@Res() res, @Param('todoId', new ValidateObjectId()) todoId) {
     const todo = await this.todoService.getTodo(todoId);
@@ -54,6 +61,7 @@ export class TodoController {
     return res.status(HttpStatus.OK).json(todo);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('all')
   async getTodos(@Res() res) {
     const todos = await this.todoService.getTodos();
