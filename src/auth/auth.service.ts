@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { UsersService } from '../users/users.service';
@@ -21,9 +21,15 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { username: user.username, userId: user.userId };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  getUserFromRes(@Res() res): Object {
+    const token = res.req.headers.authorization.replace('Bearer ', '');
+    const user = this.jwtService.decode(token, { json: true, complete: false });
+    return user;
   }
 }

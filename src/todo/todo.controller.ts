@@ -2,7 +2,7 @@ import { Controller, Res, Body, HttpStatus, Post, Get, Param, NotFoundException,
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-
+import { AuthService } from '../auth/auth.service';
 import { TodoService } from './todo.service';
 import { CreateTodoDTO } from './dto/create-todo.dto';
 import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
@@ -10,7 +10,10 @@ import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';
 @Controller('todo')
 export class TodoController {
 
-  constructor(private todoService: TodoService) { }
+  constructor(
+    private todoService: TodoService,
+    private authService: AuthService,
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Post('/add')
